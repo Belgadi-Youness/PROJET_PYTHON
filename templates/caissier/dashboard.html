@@ -1,0 +1,24 @@
+{% extends "dashboards/base_dashboard.html" %}
+{% block dash_main %}
+<div class="dash-table-wrap">
+  <table class="dash-table">
+    <thead>
+      <tr><th>N°</th><th>Patient</th><th>Médecin</th><th>Total</th><th>Statut</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for f in factures %}
+        <tr>
+          <td>{{ f.numero }}</td>
+          <td>{{ f.patient.user.get_full_name|default:f.patient.user.email }}</td>
+          <td>Dr. {{ f.consultation.medecin.user.get_full_name|default:f.consultation.medecin.user.email }}</td>
+          <td>{{ f.total_ttc }} CHF</td>
+          <td><span class="badge badge-{{ f.statut }}">{{ f.get_statut_display }}</span></td>
+          <td><a class="dash-btn dash-btn--ghost" style="padding:0.35rem 0.65rem;font-size:0.78rem;" href="{% url 'facturation:facture_detail' f.pk %}">Détail</a></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6">Aucune facture en attente.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

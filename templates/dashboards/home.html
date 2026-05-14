@@ -42,7 +42,7 @@
       {% endfor %}
     </ul>
   {% else %}
-    <p class="dash-requests__empty">Aucune demande pour le moment.</p>
+    <p class="dash-requests__empty">Aucune demande liée à ce compte pour le moment. Si vous avez envoyé une demande <strong>sans être connecté</strong>, connectez-vous avec le <strong>même e-mail</strong> que sur le formulaire : vos demandes seront alors rattachées automatiquement.</p>
   {% endif %}
   <a class="dash-btn dash-btn--primary dash-requests__cta" href="{% url 'appointments:create' %}">Nouvelle demande</a>
 </section>

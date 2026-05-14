@@ -1,26 +1,30 @@
+from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
 from .forms import AesculiaLoginForm
 
-
-class AesculiaLogoutView(LogoutView):
-    """Permet la déconnexion par lien (GET) — pratique sur la vitrine ; en production préférer POST."""
-
-    http_method_names = ["get", "post", "head", "options", "trace"]
-
-
 ROLE_REDIRECTS = {
-    "patient": reverse_lazy("patient_dashboard"),
-    "medecin": reverse_lazy("medecin_dashboard"),
-    "infirmier": reverse_lazy("infirmier_dashboard"),
-    "caissier": reverse_lazy("caissier_dashboard"),
+    "patient":   reverse_lazy("patients:patient_dashboard"),
+    "medecin":   reverse_lazy("medecins:medecin_dashboard"),
+    "infirmier": reverse_lazy("infirmier:infirmier_dashboard"),
+    "caissier":  reverse_lazy("facturation:caissier_dashboard"),
 }
 
 
-class AesculiaLoginView(LoginView):
-    """Connexion unique — redirection selon le rôle (ou admin Django si superuser)."""
+class AesculiaLogoutView(LogoutView):
+    """Compatible Django 5 — fonctionne en GET et POST."""
+    http_method_names = ["get", "post", "head", "options", "trace"]
+    next_page = reverse_lazy("landing")
 
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect(self.next_page)
+
+
+class AesculiaLoginView(LoginView):
+    """Connexion unique — redirection selon le rôle."""
     template_name = "auth/login.html"
     authentication_form = AesculiaLoginForm
     redirect_authenticated_user = True
@@ -35,12 +39,8 @@ class AesculiaLoginView(LoginView):
 
     def get_success_url(self):
         user = self.request.user
-        if user.is_superuser:
+        if user.is_superuser or (getattr(user, "role", None) == "admin" and user.is_staff):
             return str(reverse_lazy("admin:index"))
         role = getattr(user, "role", None) or "patient"
-        if role == "admin" and user.is_staff:
-            return str(reverse_lazy("admin:index"))
         url = ROLE_REDIRECTS.get(role)
-        if url is not None:
-            return str(url)
-        return str(reverse_lazy("patient_dashboard"))
+        return str(url) if url else str(reverse_lazy("patients:patient_dashboard"))

@@ -1,0 +1,58 @@
+{% extends "dashboards/base_dashboard.html" %}
+{% block dash_main %}
+<section class="dash-hero" aria-labelledby="dash-patient-next">
+  <p class="dash-hero__kicker">Prochain rendez-vous</p>
+  {% if next_rdv %}
+    <h2 id="dash-patient-next" class="dash-hero__title">Dr. {{ next_rdv.medecin.user.get_full_name|default:next_rdv.medecin.user.email }}</h2>
+    <p class="dash-hero__subtitle">{{ next_rdv.date_heure|date:"l d F Y" }} à {{ next_rdv.date_heure|date:"H\hi" }} — {{ next_rdv.motif }}</p>
+    <p><span class="badge badge-{{ next_rdv.statut }}">{{ next_rdv.get_statut_display }}</span></p>
+    <div class="dash-cta-row">
+      <form method="post" action="{% url 'patients:rdv_annuler' next_rdv.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="dash-btn dash-btn--ghost">Annuler</button>
+      </form>
+      <a class="dash-btn dash-btn--primary" href="{% url 'patients:rdv_nouveau' %}">Prendre un autre RDV</a>
+    </div>
+  {% else %}
+    <h2 id="dash-patient-next" class="dash-hero__title">Aucun rendez-vous à venir</h2>
+    <p class="dash-hero__subtitle">Réservez un créneau avec l’un de nos médecins.</p>
+    <a class="dash-btn dash-btn--primary dash-hero__cta" href="{% url 'patients:rdv_nouveau' %}">Prendre rendez-vous</a>
+  {% endif %}
+</section>
+
+<div class="dash-grid" aria-label="Statistiques">
+  <article class="dash-card">
+    <h2>Total RDV</h2>
+    <div class="dash-card__value">{{ stats.rdv_total }}</div>
+    <p>Tous statuts confondus.</p>
+  </article>
+  <article class="dash-card">
+    <h2>Consultations</h2>
+    <div class="dash-card__value">{{ stats.consultations }}</div>
+    <p>Consultations enregistrées.</p>
+  </article>
+  <article class="dash-card">
+    <h2>Factures impayées</h2>
+    <div class="dash-card__value">{{ stats.factures_impayees }}</div>
+    <p>Factures au statut « émise ».</p>
+  </article>
+</div>
+
+<section class="dash-requests" aria-labelledby="dash-recent-consult">
+  <h2 id="dash-recent-consult" class="dash-requests__title">Consultations récentes</h2>
+  {% if recent_consultations %}
+    <ul class="dash-requests__list">
+      {% for c in recent_consultations %}
+        <li class="dash-requests__item">
+          <span class="dash-requests__date">{{ c.date|date:"d/m/Y H:i" }}</span>
+          <span class="dash-requests__status">Dr. {{ c.medecin.user.get_full_name|default:c.medecin.user.email }}</span>
+          <span class="dash-requests__summary">{{ c.diagnostic|default:"—"|truncatechars:80 }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="dash-requests__empty">Aucune consultation enregistrée pour le moment.</p>
+  {% endif %}
+  <a class="dash-btn dash-btn--ghost dash-requests__cta" href="{% url 'patients:dossier' %}">Voir mon dossier</a>
+</section>
+{% endblock %}

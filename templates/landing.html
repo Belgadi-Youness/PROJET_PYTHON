@@ -58,7 +58,7 @@
         {% else %}
           <a class="aes-btn aes-btn--header aes-btn--header-ghost" href="{% url 'auth:login' %}">Connexion</a>
         {% endif %}
-        <a class="aes-btn aes-btn--header" href="{% url 'appointments:create' %}">Prendre RDV</a>
+        <a class="aes-btn aes-btn--header" href="{% url 'patients:rdv_nouveau' %}">Prendre RDV</a>
       </div>
     </nav>
   </div>
@@ -74,7 +74,7 @@
         <li><a href="#temoignages" data-nav-section="temoignages">Témoignages</a></li>
         <li><a href="#contact" data-nav-section="contact">Contact</a></li>
       </ul>
-      <a class="aes-btn aes-btn--header aes-btn--block" href="{% url 'appointments:create' %}">Prendre RDV</a>
+      <a class="aes-btn aes-btn--header aes-btn--block" href="{% url 'patients:rdv_nouveau' %}">Prendre RDV</a>
       <div class="aes-nav-overlay__auth">
         {% if portal_dashboard_url %}
           <a class="aes-btn aes-btn--header-ghost aes-btn--block aes-btn--sq" href="{{ portal_dashboard_url }}">{{ portal_label }}</a>
@@ -99,7 +99,7 @@
         <p class="aes-hero__tag">{{ clinic.tagline }}</p>
         <p class="aes-hero__tag2">{{ clinic.subtagline }}</p>
         <div class="aes-hero__ctas">
-          <a class="aes-btn aes-btn--moss" href="{% url 'appointments:create' %}">Prendre Rendez-vous</a>
+          <a class="aes-btn aes-btn--moss" href="{% url 'patients:rdv_nouveau' %}">Prendre Rendez-vous</a>
           <a class="aes-btn aes-btn--outline" href="#soins">Découvrir Aesculia</a>
         </div>
         <div class="aes-hero__trust" role="list">
@@ -144,7 +144,7 @@
             <button type="button" class="aes-slot" data-slot>{{ slot }}</button>
             {% endfor %}
           </div>
-          <a class="aes-btn aes-btn--moss aes-btn--wide aes-btn--sq" href="{% url 'appointments:create' %}">Réserver ce créneau</a>
+          <a class="aes-btn aes-btn--moss aes-btn--wide aes-btn--sq" href="{% url 'patients:rdv_nouveau' %}">Réserver ce créneau</a>
         </div>
       </div>
     </div>
@@ -231,7 +231,7 @@
           </div>
           <h3 class="aes-service__name">{{ service.name }}</h3>
           <p class="aes-service__text">{% firstof service.short_description service.description "" %}</p>
-          <a href="{% url 'appointments:create' %}?service={{ service.pk|default:service.id }}" class="aes-service__link">Découvrir <span class="aes-service__arrow" aria-hidden="true">→</span></a>
+          <a href="{% url 'patients:rdv_nouveau' %}?service={{ service.pk|default:service.id }}" class="aes-service__link">Découvrir <span class="aes-service__arrow" aria-hidden="true">→</span></a>
         </article>
         {% empty %}
         <p class="aes-empty">Aucun service — fournir le queryset <code>services</code> dans la vue.</p>
@@ -331,7 +331,7 @@
             {% endfor %}
           </div>
         </div>
-        <a class="aes-doc__cta" href="{% url 'appointments:create' %}?doctor={{ medecin.pk|default:medecin.id }}">Prendre RDV</a>
+        <a class="aes-doc__cta" href="{% url 'patients:rdv_nouveau' %}?doctor={{ medecin.pk|default:medecin.id }}">Prendre RDV</a>
       </article>
       {% empty %}
       <p class="aes-empty aes-empty--rail">Aucun médecin — queryset <code>doctors</code> (6 max).</p>
@@ -394,7 +394,7 @@
       <p class="aes-cta__tag">Rejoignez Aesculia</p>
       <h2 id="aes-cta-h2" class="aes-cta__h2">Votre santé mérite<br>ce qu'il y a de mieux.</h2>
       <p class="aes-cta__sub">Rejoignez les <strong>{{ stats.patients_count|default:0 }}+</strong> patients qui nous font confiance.</p>
-      <a class="aes-btn aes-btn--moss aes-btn--xl aes-btn--pulse" href="{% url 'appointments:create' %}">Réserver ma consultation</a>
+      <a class="aes-btn aes-btn--moss aes-btn--xl aes-btn--pulse" href="{% url 'patients:rdv_nouveau' %}">Réserver ma consultation</a>
     </div>
   </section>
 </main>
@@ -425,7 +425,7 @@
         <li><a href="#a-propos">À propos</a></li>
         <li><a href="#temoignages">Témoignages</a></li>
         <li><a href="#contact">Contact</a></li>
-        <li><a href="{% url 'appointments:create' %}">Prendre RDV</a></li>
+        <li><a href="{% url 'patients:rdv_nouveau' %}">Prendre RDV</a></li>
       </ul>
     </div>
     <div class="aes-footer__col">

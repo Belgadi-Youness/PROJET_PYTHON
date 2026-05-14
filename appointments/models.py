@@ -40,3 +40,13 @@ class AppointmentRequest(models.Model):
 
     def __str__(self) -> str:
         return f"{self.full_name} ({self.get_status_display()}) — {self.created_at:%Y-%m-%d}"
+
+    @classmethod
+    def visible_for_account(cls, user, limit: int = 10) -> list["AppointmentRequest"]:
+        """Demandes du compte, y compris celles saisies en invité avec le même e-mail."""
+        if not getattr(user, "is_authenticated", False):
+            return []
+        email = (getattr(user, "email", None) or "").strip()
+        if email:
+            cls.objects.filter(user__isnull=True, email__iexact=email).update(user=user)
+        return list(cls.objects.filter(user=user).order_by("-created_at")[:limit])

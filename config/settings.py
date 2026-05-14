@@ -21,8 +21,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "clinic_common",
     "accounts",
-    "appointments",
+    "patients",
+    "medecins",
+    "rendez_vous",
+    "consultations",
+    "facturation",
+    "infirmier",
     "sitepages",
 ]
 
@@ -59,7 +65,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Django utilise le socket si HOST est un chemin absolu (voir get_connection_params).
 _db_options: dict = {
     "charset": "utf8mb4",
-    "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+    "init_command": "SET sql_mode='STRICT_TRANS_TABLES'; SET time_zone = '+00:00'",
 }
 
 _db_socket = os.environ.get("DB_SOCKET", "").strip()
@@ -85,12 +91,15 @@ DATABASES = {"default": _db}
 AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = "fr-fr"
-TIME_ZONE = "Europe/Zurich"
+TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

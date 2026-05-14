@@ -1,0 +1,11 @@
+{% extends "dashboards/base_dashboard.html" %}
+{% block dash_main %}
+<div class="dash-card" style="max-width:520px;">
+  <h2 style="font-family:var(--font-display);font-weight:400;">Constantes — {{ rdv.patient.user.get_full_name|default:rdv.patient.user.email }}</h2>
+  <p>{{ rdv.date_heure|date:"d/m/Y H:i" }} — Dr. {{ rdv.medecin.user.get_full_name|default:rdv.medecin.user.email }}</p>
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="dash-btn dash-btn--primary" style="margin-top:1rem;">Enregistrer</button>
+  </form>
+</div>
+{% endblock %}

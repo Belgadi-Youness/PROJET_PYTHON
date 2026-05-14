@@ -1,0 +1,23 @@
+{% extends "dashboards/base_dashboard.html" %}
+{% block dash_main %}
+<div class="dash-table-wrap">
+  <table class="dash-table">
+    <thead>
+      <tr><th>N°</th><th>Date</th><th>Total</th><th>Statut</th><th>Médecin</th></tr>
+    </thead>
+    <tbody>
+      {% for f in factures %}
+        <tr>
+          <td><a href="{% url 'facturation:facture_detail' f.pk %}">{{ f.numero }}</a></td>
+          <td>{{ f.created_at|date:"d/m/Y" }}</td>
+          <td>{{ f.total_ttc }} CHF</td>
+          <td><span class="badge badge-{{ f.statut }}">{{ f.get_statut_display }}</span></td>
+          <td>Dr. {{ f.consultation.medecin.user.get_full_name|default:f.consultation.medecin.user.email }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5">Aucune facture.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

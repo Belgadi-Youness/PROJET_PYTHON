@@ -36,8 +36,10 @@
   <div class="rdv-done-actions">
     {% if user.is_authenticated %}
       {% if user.role == 'patient' %}
-        <a class="rdv-btn rdv-btn--submit rdv-btn--inline" href="{% url 'patient_dashboard' %}#demandes-rdv">Voir mes demandes</a>
+        <a class="rdv-btn rdv-btn--submit rdv-btn--inline" href="{% url 'patients:rdv_list' %}">Mes rendez-vous</a>
       {% endif %}
+    {% else %}
+      <p class="rdv-done-hint">Pour retrouver vos demandes dans « Mes demandes », connectez-vous avec le <strong>même e-mail</strong> que sur le formulaire.</p>
     {% endif %}
     <a class="rdv-btn rdv-btn--secondary rdv-btn--inline" href="{% url 'landing' %}">Accueil</a>
   </div>

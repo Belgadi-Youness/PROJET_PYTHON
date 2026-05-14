@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{{ role_title }} · {{ clinic.name|default:"AESCULIA" }}{% endblock %}
+{% block title %}{{ role_title }} · {% if clinic %}{{ clinic.name }}{% else %}AESCULIA{% endif %}{% endblock %}
 {% block body_class %}dash-body{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}">
@@ -8,6 +8,13 @@
 {% endblock %}
 {% block content %}
 <a href="#dash-main" class="skip-link">Aller au contenu</a>
+{% if messages %}
+<div class="toast-stack" aria-live="polite">
+  {% for message in messages %}
+    <div class="toast toast-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
 <div class="dash-app" data-role="{{ role_key }}">
   <aside class="dash-sidebar" aria-label="Navigation principale">
     <a class="dash-brand" href="{% url 'landing' %}">
@@ -28,14 +35,16 @@
     </nav>
     <div class="dash-sidebar__foot">
       <a href="{% url 'landing' %}">Site public</a>
-      <a href="{% url 'auth:logout' %}">Déconnexion</a>
+      <form method="post" action="{% url 'auth:logout' %}" style="margin:0">{% csrf_token %}<button type="submit" class="dash-sidebar__logout">Déconnexion</button></form>
     </div>
   </aside>
   <div class="dash-shell">
     <header class="dash-top">
       <div class="dash-top__hello">
         <h1>Bonjour{% if user_display %}, {{ user_display }}{% endif %}</h1>
+        {% if dashboard_intro %}
         <p>{{ dashboard_intro }}</p>
+        {% endif %}
       </div>
       <span class="dash-top__badge">{{ role_title }}</span>
     </header>
@@ -44,4 +53,17 @@
     </main>
   </div>
 </div>
+{% endblock %}
+{% block extra_js %}
+{{ block.super }}
+<script>
+(function () {
+  document.querySelectorAll(".toast").forEach(function (el) {
+    setTimeout(function () {
+      el.classList.add("toast--out");
+      setTimeout(function () { el.remove(); }, 400);
+    }, 4000);
+  });
+})();
+</script>
 {% endblock %}

@@ -1,0 +1,36 @@
+{% extends "dashboards/base_dashboard.html" %}
+{% block dash_main %}
+<div class="dash-table-wrap">
+  <table class="dash-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Médecin</th>
+        <th>Motif</th>
+        <th>Statut</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rendez_vous %}
+        <tr>
+          <td>{{ r.date_heure|date:"d/m/Y H:i" }}</td>
+          <td>Dr. {{ r.medecin.user.get_full_name|default:r.medecin.user.email }}</td>
+          <td>{{ r.motif|truncatechars:40 }}</td>
+          <td><span class="badge badge-{{ r.statut }}">{{ r.get_statut_display }}</span></td>
+          <td>
+            {% if r.statut == "planifie" or r.statut == "confirme" %}
+              <form method="post" action="{% url 'patients:rdv_annuler' r.pk %}" style="display:inline;">{% csrf_token %}
+                <button type="submit" class="dash-btn dash-btn--ghost" style="padding:0.35rem 0.65rem;font-size:0.78rem;">Annuler</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5">Aucun rendez-vous.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p style="margin-top:1.25rem;"><a class="dash-btn dash-btn--primary" href="{% url 'patients:rdv_nouveau' %}">Nouveau rendez-vous</a></p>
+{% endblock %}

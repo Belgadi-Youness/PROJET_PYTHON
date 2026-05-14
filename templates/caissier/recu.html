@@ -1,0 +1,8 @@
+{% extends "dashboards/base_dashboard.html" %}
+{% block dash_main %}
+<div class="dash-card">
+  <h2 style="font-family:var(--font-display);font-weight:400;">Reçu — {{ facture.numero }}</h2>
+  <p>Montant total : {{ facture.total_ttc }} CHF</p>
+  <p>Statut : {{ facture.get_statut_display }}</p>
+</div>
+{% endblock %}

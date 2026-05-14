@@ -1,0 +1,10 @@
+{% extends "dashboards/base_dashboard.html" %}
+{% block dash_main %}
+<div class="dash-hero">
+  <p class="dash-hero__kicker">Confirmation</p>
+  <h2 class="dash-hero__title">Rendez-vous enregistré</h2>
+  <p class="dash-hero__subtitle">{{ rdv.date_heure|date:"l d F Y à H\hi" }} — Dr. {{ rdv.medecin.user.get_full_name|default:rdv.medecin.user.email }}</p>
+  <p><span class="badge badge-{{ rdv.statut }}">{{ rdv.get_statut_display }}</span></p>
+  <a class="dash-btn dash-btn--primary dash-hero__cta" href="{% url 'patients:rdv_list' %}">Voir mes rendez-vous</a>
+</div>
+{% endblock %}
